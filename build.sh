@@ -68,7 +68,7 @@ mv arch/arm/boot/dt.img tmp/flash/tools/
 cp tmp/flash/tools/* flash/tools/
 cp -r tmp/flash/system/* flash/system/
 cd flash/
-zip -qr ../test-v{kernelversion}.zip *
+zip -qr ../test-v${kernelversion}.zip *
 cd ../
 BUILD_END=$(date +"%s")
 DIFF=$(($BUILD_END - $BUILD_START))
