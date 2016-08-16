@@ -46,7 +46,7 @@ echo
 echo "Compiling ${kernelname} Kernel!"
 echo
 echo "Initializing defconfig"
-make test_defconfig
+make test-lux_defconfig
 echo
 echo "Building kernel"
 make -j4 zImage
