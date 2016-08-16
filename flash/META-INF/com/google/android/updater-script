@@ -5,7 +5,7 @@ assert(getprop("ro.product.device") == "lux" ||
        abort("This Kernel is only for Motorola Moto X Play; your device is " +
              getprop("ro.product.device") + "."););
 
-ui_print("")
+ui_print(" ");
 
 ui_print("Extracting flashing tools");
 package_extract_dir("tools", "/tmp");
@@ -33,6 +33,6 @@ symlink("/system/lib/modules/pronto/pronto_wlan.ko", "/system/lib/modules/wlan.k
 unmount("/system");
 set_progress(0.9);
 
-ui_print("")
+ui_print(" ");
 ui_print("Installation completed");
 set_progress(1.0);
