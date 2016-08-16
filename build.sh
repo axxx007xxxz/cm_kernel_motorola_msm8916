@@ -1,7 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
  # Copyright � 2016,  Sultan Qasim Khan <sultanqasim@gmail.com> 		      
  # Copyright � 2016,  Varun Chitre  <varun.chitre15@gmail.com>	
+ # Edited by axxx007xxxz
  #
  # Custom build script
  #
@@ -15,10 +16,20 @@
  # GNU General Public License for more details.
  #
  # Please maintain this if you use this script or any part of it
- #
 
-#!/bin/bash
 BUILD_START=$(date +"%s")
+echo "Cleaning"
+make clean
+rm -f arch/arm/boot/dts/*.dtb
+rm -f arch/arm/boot/dt.img
+rm -fr tmp
+mkdir tmp
+rm -f flash/tools/zImage
+rm -f flash/tools/dt.img
+rm -fr flash/system/*
+rm -f flashable.zip
+echo
+echo "Setting up"
 blue='\033[0;34m'
 cyan='\033[0;36m'
 yellow='\033[0;33m'
@@ -26,39 +37,39 @@ red='\033[0;31m'
 nocol='\033[0m'
 export ARCH=arm
 export SUBARCH=arm
-export CROSS_COMPILE=/home/technoander/uber-4.8/bin/arm-eabi-
-export KBUILD_BUILD_USER="technoander"
-export KBUILD_BUILD_HOST="technoander-dev"
-echo -e "$red***********************************************"
-echo "          Compiling kernel                          "   
-echo -e "**********************************************$blue"
-rm -f arch/arm/boot/dts/*.dtb
-rm -f arch/arm/boot/dt.img
-rm -f flash_zip/boot.img
-echo -e " Initializing defconfig"
-make lux_defconfig
-echo -e " Building kernel"
+export CROSS_COMPILE=$(xdg-user-dir)/tools/ubertc-arm-eabi-4.9/bin/arm-eabi-
+export KBUILD_BUILD_USER="axxx007xxxz"
+export KBUILD_BUILD_HOST="peppermint"
+kernelname="Test"
+kernelversion="1"
+echo
+echo "Compiling ${kernelname} Kernel!"
+echo
+echo "Initializing defconfig"
+make test_defconfig
+echo
+echo "Building kernel"
 make -j4 zImage
 make -j4 dtbs
-
-/home/technoander/CoffeeKernel/tools/dtbtool/dtbtool -o /home/technoander/CoffeeKernel/arch/arm/boot/dt.img -s 2048 -p /home/technoander/CoffeeKernel/scripts/dtc/ /home/technoander/CoffeeKernel/arch/arm/boot/dts/
-
+tools/dtbToolCM -o arch/arm/boot/dt.img -s 2048 -p scripts/dtc/ arch/arm/boot/dts/
+echo
+echo "Building modules"
 make -j4 modules
-echo -e "$yellow*************************"
-echo "          Make flashable zip              "
-echo -e "*******************************$yelllow"
-rm -rf technoander_install
-mkdir -p technoander_install
-make -j4 modules_install INSTALL_MOD_PATH=technoander_install INSTALL_MOD_STRIP=1
-mkdir -p flash_zip/system/lib/modules/pronto
-find technoander_install/ -name '*.ko' -type f -exec cp '{}' flash_zip/system/lib/modules/ \;
-mv flash_zip/system/lib/modules/wlan.ko flash_zip/system/lib/modules/pronto/pronto_wlan.ko
-cp arch/arm/boot/zImage flash_zip/tools/
-cp arch/arm/boot/dt.img flash_zip/tools/
-rm -f /home/technoander/lux_coffeekernel_rx.zip
-cd flash_zip
-zip -r ../arch/arm/boot/coffeekernel.zip ./
-mv /home/technoander/CoffeeKernel/arch/arm/boot/coffee_kernel.zip /home/technoander/lux_coffeekernel_rx.zip
+echo
+echo "Make flashable zip"
+mkdir tmp/modules
+make -j4 modules_install INSTALL_MOD_PATH=tmp/modules INSTALL_MOD_STRIP=1
+mkdir -p tmp/flash/system/lib/modules/pronto
+find tmp/modules -name '*.ko' -type f -exec cp '{}' tmp/flash/system/lib/modules/ \;
+mv tmp/flash/system/lib/modules/wlan.ko tmp/flash/system/lib/modules/pronto/pronto_wlan.ko
+mkdir tmp/flash/tools
+mv arch/arm/boot/zImage tmp/flash/tools/
+mv arch/arm/boot/dt.img tmp/flash/tools/
+cp tmp/flash/tools/* flash/tools/
+cp -r tmp/flash/system/* flash/system/
+cd flash/
+zip -qr ../test-v{kernelversion}.zip *
+cd ../
 BUILD_END=$(date +"%s")
 DIFF=$(($BUILD_END - $BUILD_START))
-echo -e "$yellow Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.$nocol"
+echo "$yellow Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.$nocol"
