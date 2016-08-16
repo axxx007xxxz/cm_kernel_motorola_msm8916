@@ -17,6 +17,7 @@
  #
  # Please maintain this if you use this script or any part of it
 
+BUILD_START=$(date +"%s")
 echo "Setting up"
 blue='\033[0;34m'
 cyan='\033[0;36m'
@@ -31,7 +32,6 @@ export KBUILD_BUILD_HOST="peppermint"
 kernelname="Test"
 kernelversion="1"
 echo
-BUILD_START=$(date +"%s")
 echo "Cleaning"
 make clean
 rm -f arch/arm/boot/dts/*.dtb
