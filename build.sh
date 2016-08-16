@@ -41,7 +41,7 @@ mkdir tmp
 rm -f flash/tools/zImage
 rm -f flash/tools/dt.img
 rm -fr flash/system/*
-rm -f ${kernelname}-v${kernelversion}.zip
+rm -f ${kernelname}_v${kernelversion}.zip
 echo
 echo "Compiling ${kernelname} Kernel!"
 echo
