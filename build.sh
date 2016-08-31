@@ -25,7 +25,7 @@ cyan='\033[0;36m'
 green='\033[0;32m'
 lightblue='\033[1;34m'
 red='\033[0;31m'
-echo -e "${blue}Setting up${nocol}"
+echo "${blue}Setting up${nocol}"
 export ARCH=arm
 export SUBARCH=arm
 export CROSS_COMPILE=$(xdg-user-dir)/tools/ubertc-arm-eabi-4.9/bin/arm-eabi-
@@ -34,7 +34,7 @@ export KBUILD_BUILD_HOST="peppermint"
 kernelname="Test"
 kernelversion="1"
 echo
-echo -e "${blue}Cleaning${nocol}"
+echo "${blue}Cleaning${nocol}"
 make clean
 rm -f arch/arm/boot/dts/*.dtb
 rm -f arch/arm/boot/dt.img
@@ -46,20 +46,20 @@ rm -fr flash/system/*
 rm -f ${kernelname}_v${kernelversion}.zip
 echo
 echo
-echo -e "${lightblue}Compiling ${kernelname} Kernel${nocol}"
+echo "${lightblue}Compiling ${kernelname} Kernel${nocol}"
 echo
-echo -e "${blue}Initializing defconfig${nocol}"
+echo "${blue}Initializing defconfig${nocol}"
 make test-lux_defconfig
 echo
-echo -e "${blue}Building kernel${nocol}"
+echo "${blue}Building kernel${nocol}"
 make -j4 zImage
 make -j4 dtbs
 tools/dtbToolCM -o arch/arm/boot/dt.img -s 2048 -p scripts/dtc/ arch/arm/boot/dts/
 echo
-echo -e "${blue}Building modules${nocol}"
+echo "${blue}Building modules${nocol}"
 make -j4 modules
 echo
-echo -e "${blue}Making flashable zip${nocol}"
+echo "${blue}Making flashable zip${nocol}"
 mkdir tmp/modules
 make -j4 modules_install INSTALL_MOD_PATH=tmp/modules INSTALL_MOD_STRIP=1
 mkdir -p tmp/flash/system/lib/modules/pronto
@@ -78,4 +78,4 @@ echo
 echo
 BUILD_END=$(date +"%s")
 DIFF=$(($BUILD_END - $BUILD_START))
-echo -e "$(tput bold)${cyan}Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds!${nocol}$(tput sgr0)"
+echo "$(tput bold)${cyan}Build completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds!${nocol}$(tput sgr0)"
