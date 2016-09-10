@@ -35,7 +35,7 @@ if [[ "$1" = "--help" || "$1" = "-h" ]]
 			jobs="${1}"
 	elif [ -z "$1" ]
 		then
-			jobs=`cat /proc/cpuinfo |grep -c "processor"`
+			jobs="-j`cat /proc/cpuinfo |grep -c "processor"`"
 	else
 			echo "Error!"
 			echo "Run with --help or -h for options list."
