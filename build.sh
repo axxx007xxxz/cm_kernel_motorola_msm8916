@@ -25,16 +25,21 @@ cyan='\033[0;36m'
 green='\033[0;32m'
 lightblue='\033[1;34m'
 red='\033[0;31m'
-if [ "$1" = "--help" ]
+if [[ "$1" = "--help" || "$1" = "-h" ]]
 		then
 			echo "Usage: ./build.sh -jx"
-			echo "x is number of jobs"
+			echo "x is number of jobs."
 			exit
 	elif [[ "$1" == "-j"* ]]
 		then
 			jobs="${1}"
+	elif [ -z "$1" ]
+		then
+			jobs=`cat /proc/cpuinfo |grep -c "processor"`
 	else
-			jobs="-j4"
+			echo "Error!"
+			echo "Run with --help or -h for options list."
+			exit
 fi
 echo -e "${blue}Setting up${nocol}"
 export ARCH=arm
@@ -65,6 +70,8 @@ echo
 echo -e "${blue}Building kernel${nocol}"
 make ${jobs} zImage
 make ${jobs} dtbs
+echo
+echo -e "${blue}Generating master DTB${nocol}"
 tools/dtbToolCM -o arch/arm/boot/dt.img -s 2048 -p scripts/dtc/ arch/arm/boot/dts/
 echo
 echo -e "${blue}Building modules${nocol}"
